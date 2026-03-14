@@ -5,10 +5,6 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Kivo | Unified Multilingual Feedback Hub",
   description: "Ingest and analyze global customer feedback without language barriers. Powered by Lingo.dev.",
-  icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/favicon.ico" }],
-    shortcut: "/favicon.svg",
-  },
 };
 
 export default function RootLayout({
