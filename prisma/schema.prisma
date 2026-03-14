@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// NextAuth Models
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // App logic
+  hasCompletedDemo Boolean @default(false)
+  subscriptionTier String  @default("FREE") // "FREE" | "PREMIUM"
+  analystLanguage  String  @default("en")
+  aiUsageCount     Int     @default(0)
+  webhookApiKeyHash   String?
+  webhookApiKeyPrefix String?
+  webhookApiKeyUpdatedAt DateTime?
+  apps             App[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model App {
+  id               String     @id @default(cuid())
+  name             String
+  sourceType       String     // "appstore", "playstore", "webhook"
+  externalId       String?    // e.g. App Store ID or Package Name
+  userId           String
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feedback         Feedback[]
+  lastSyncedAt     DateTime?
+  lastSyncStatus   String     @default("idle")
+  lastSyncPages    Int        @default(0)
+  lastSyncFetched  Int        @default(0)
+  lastSyncInserted Int        @default(0)
+  lastSyncMessage  String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@index([userId])
+}
+
+// Kivo Application models
+model Feedback {
+  id              String   @id @default(cuid())
+  source          String   // "appstore", "playstore", "webhook", "manual"
+  sourceLocale    String   // e.g. "ja", "fr", "de"
+  originalText    String
+  translatedText  String?
+  targetLocale    String   @default("en")
+  sentiment       String?  // "positive", "negative", "neutral", "mixed"
+  rating          Int?     // 1-5 stars if available
+  authorName      String?
+  externalId      String?  // original review id from source
+  
+  appId           String?
+  app             App?     @relation(fields: [appId], references: [id], onDelete: Cascade)
+  
+  metadata        Json?    // extra unstructured data
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([source])
+  @@index([sourceLocale])
+  @@index([sentiment])
+  @@index([createdAt])
+  @@index([appId])
+}

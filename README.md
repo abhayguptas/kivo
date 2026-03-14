@@ -1,36 +1,220 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kivo - Revenue Intelligence for Multilingual Product Feedback
 
-## Getting Started
+**Built for the Lingo.dev Multilingual Hackathon #3**
 
-First, run the development server:
+> **Powered by Lingo.dev Engine, Lingo.dev SDK, and Lingo.dev CLI**
+
+Kivo helps global product teams turn multilingual customer feedback into prioritized growth actions.
+
+Instead of just translating reviews, Kivo identifies market-level friction, highlights risk by locale, and surfaces which fixes can improve retention and conversion fastest.
+
+---
+
+## Why Kivo
+
+Modern SaaS teams receive feedback in many languages across app stores, support channels, and webhooks.
+Most teams can not analyze that data at speed because language context is fragmented.
+
+Kivo solves this by combining:
+
+1. **Realtime multilingual ingestion** (App Store + webhook)
+2. **High-fidelity runtime localization** with **Lingo.dev SDK**
+3. **AI-driven prioritization** (opportunities, risk, impact)
+4. **Premium SaaS analytics UX** (charts, signals, conversion-focused summaries)
+
+---
+
+## Lingo.dev-First Architecture
+
+Kivo is intentionally built to showcase deep and practical Lingo.dev usage.
+
+### 1) Runtime Translation (Core Engine)
+- Uses **`lingo.dev/sdk`** via `LingoDotDevEngine`
+- Translates incoming feedback objects while preserving schema and metadata
+- Powers both ingestion-time localization and on-demand re-translation
+
+Key implementation paths:
+- `src/app/actions/translate.ts`
+- `src/app/actions/ai.ts`
+- `src/app/api/webhooks/v1/ingest/route.ts`
+
+### 2) Static i18n Workflow (Repo Localization)
+- Uses **Lingo.dev CLI** configuration through `i18n.json`
+- Prepared for automated static string localization in CI workflows
+
+Key files:
+- `i18n.json`
+- `.github/workflows/` (CI translation automation)
+
+### 3) Productized Multilingual UX
+- Locale-aware feedback intelligence (top locales, locked premium locales)
+- Language-normalized review analysis for PM/Growth workflows
+- Two-way response flow: team language -> customer language
+
+---
+
+## What Is Implemented
+
+### Premium Dashboard (Analytics-First)
+- KPI strip: total reviews, positivity score, average rating, active languages
+- Charts for:
+  - Review volume trend
+  - Sentiment trend
+  - Rating distribution
+  - Locale distribution
+  - Source/app mix
+- Opportunity board with priority + impact scoring
+- AI executive brief with action items and projected impact
+
+### Smarter Ingestion
+- App Store sync upgraded beyond single-page RSS behavior
+- Paginated backfill, dedupe, and incremental sync behavior
+- Manual per-app sync action in Sources page
+
+### Trial + Conversion Design
+- Free plan limits with strategic upgrade moments
+- Dynamic top-5 locale unlock policy (premium unlocks full set)
+- Contextual premium modals instead of disruptive JS alerts
+
+### Guided Demo Mode
+- Narrative walkthrough:
+  1. Ingest multilingual feedback
+  2. Normalize and score
+  3. Show market opportunities
+  4. Simulate premium unlock
+
+---
+
+## Hackathon Criteria Alignment
+
+### Execution & Effort (40)
+- End-to-end SaaS flow: auth, ingest, translation, analytics, demo, premium gating
+- Real backend actions, dashboard analytics payloads, and production-like UX
+
+### Presentation & Socials (20)
+- Strong landing story and guided product simulation
+- Clear README focused on business outcomes and technical depth
+
+### Originality + Real Utility (40)
+- Not a generic translator or summary app
+- Designed for product/growth teams to make localization decisions with measurable impact
+- Practical multilingual intelligence workflow teams could pay for
+
+---
+
+## Quick Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Suggested flow:
+1. Sign in (or use demo mode)
+2. Connect an app in **Data Sources**
+3. Sync feedback
+4. Run AI Intelligence
+5. Explore locale insights and premium paths
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create `.env` with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Database
+POSTGRES_URL=...
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Auth
+AUTH_SECRET=...
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
 
-## Deploy on Vercel
+# Lingo.dev
+LINGODOTDEV_API_KEY=...
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# AI (xAI/Grok base URL in code)
+GROK_API_KEY=...
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Notes:
+- Without `LINGODOTDEV_API_KEY`, translation falls back to mock/simulated behavior for demo continuity.
+- Without `GROK_API_KEY`, AI analysis uses deterministic mock outputs.
+
+---
+
+## Webhook Ingestion API
+
+### Endpoint
+`POST /api/webhooks/v1/ingest`
+
+### Headers
+- `Authorization: Bearer <YOUR_WEBHOOK_TOKEN>`
+- `Content-Type: application/json`
+
+### Example Payload
+
+```json
+{
+  "source": "custom_integration",
+  "data": [
+    {
+      "id": "1234",
+      "sourceLocale": "ja",
+      "text": "新しいダークモードのUIデザインが本当に気に入っています！",
+      "sentiment": "positive",
+      "user": "Kenji S."
+    },
+    {
+      "id": "1235",
+      "sourceLocale": "es",
+      "text": "No puedo acceder a mi cuenta desde la última actualización.",
+      "sentiment": "negative",
+      "user": "Carlos R."
+    }
+  ]
+}
+```
+
+---
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Database/ORM:** Postgres + Prisma
+- **Auth:** NextAuth.js
+- **UI:** Tailwind CSS + shadcn/ui + Framer Motion + Recharts
+- **Localization:** **Lingo.dev SDK + Lingo.dev CLI**
+
+---
+
+## Project Positioning
+
+Kivo is a **multilingual product intelligence SaaS prototype**.
+
+This project is intentionally built to demonstrate how Lingo.dev can power:
+- realtime localization pipelines,
+- scalable multilingual analytics,
+- and business-ready premium product experiences.
+
+---
+
+## License
+
+MIT (see `LICENSE`).
+
+---
+
+## Built With Lingo.dev
+
+If you are judging this project for hackathon quality:
+
+**Kivo is not just "using translation". It is architected around Lingo.dev as the core product engine.**
+
+From ingestion to analysis to premium insights, this product is designed to showcase the practical power of the Lingo.dev ecosystem in a real SaaS use case.
+
+**Powered by Lingo.dev for the Multilingual Hackathon #3.**
