@@ -33,7 +33,15 @@ export default function LoginPage() {
           <SignInButton />
         </div>
         <p className="mt-6 text-center text-xs text-slate-500">
-          By signing in, you agree to our Terms of Service and Privacy Policy.
+          By signing in, you agree to our{" "}
+          <Link href="/privacy" className="font-medium text-blue-700 hover:underline">
+            Privacy Policy
+          </Link>{" "}
+          and{" "}
+          <Link href="/cookies" className="font-medium text-blue-700 hover:underline">
+            Cookie Policy
+          </Link>
+          .
         </p>
       </div>
     </div>

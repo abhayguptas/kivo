@@ -27,9 +27,14 @@ export function Footer() {
             <li><Link href={authPath} className="hover:text-white transition-colors flex items-center gap-2">Sign Up</Link></li>
             <li><Link href="#pricing" className="hover:text-white transition-colors flex items-center gap-2">Pricing</Link></li>
           </ul>
+          <ul className="space-y-4 text-sm font-medium">
+            <li><Link href="/privacy" className="hover:text-white transition-colors flex items-center gap-2">Privacy Policy</Link></li>
+            <li><Link href="/cookies" className="hover:text-white transition-colors flex items-center gap-2">Cookie Policy</Link></li>
+          </ul>
           <ul className="space-y-4 text-sm font-medium md:col-start-4">
+            <li><a href="https://x.com/Kivo_ai" target="_blank" rel="noreferrer" className="hover:text-white transition-colors flex items-center gap-2 border border-white/20 rounded-full px-4 py-2 bg-white/8 w-fit">Follow on X ↗</a></li>
+            <li><a href="https://github.com/abhayguptas/kivo" target="_blank" rel="noreferrer" className="hover:text-white transition-colors flex items-center gap-2 border border-white/20 rounded-full px-4 py-2 bg-white/8 w-fit">View on GitHub ↗</a></li>
             <li><a href="https://lingo.dev" target="_blank" rel="noreferrer" className="hover:text-white transition-colors flex items-center gap-2 border border-white/20 rounded-full px-4 py-2 bg-white/8 w-fit">Powered by Lingo.dev ↗</a></li>
-            <li><a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors flex items-center gap-2 border border-white/20 rounded-full px-4 py-2 bg-white/8 w-fit">View on GitHub</a></li>
           </ul>
         </div>
 
