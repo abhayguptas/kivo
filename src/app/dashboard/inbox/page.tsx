@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Inbox, 
   Search, 
@@ -53,6 +54,7 @@ export default function InboxPage() {
   const [feedback, setFeedback] = useState<FeedbackItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [selectedLocale, setSelectedLocale] = useState("all");
   const [translatingReview, setTranslatingReview] = useState<string | null>(null);
   const [generatingReply, setGeneratingReply] = useState<string | null>(null);
   const [expandedReply, setExpandedReply] = useState<string | null>(null);
@@ -114,9 +116,24 @@ export default function InboxPage() {
     fetchFeedback();
   }, [fetchFeedback]);
 
-  const filtered = feedback.filter((f) =>
-    (f.originalText + (f.translatedText || "") + (f.authorName || "")).toLowerCase().includes(search.toLowerCase())
-  );
+  const localeCounts = feedback.reduce<Record<string, number>>((acc, item) => {
+    const key = item.sourceLocale || "unknown";
+    acc[key] = (acc[key] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  const localeOptions = Object.entries(localeCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([locale, count]) => ({ locale, count }));
+
+  const filtered = feedback.filter((f) => {
+    const textMatch = (f.originalText + (f.translatedText || "") + (f.authorName || ""))
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const localeKey = f.sourceLocale || "unknown";
+    const localeMatch = selectedLocale === "all" || localeKey === selectedLocale;
+    return textMatch && localeMatch;
+  });
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -126,6 +143,19 @@ export default function InboxPage() {
           <p className="text-sm text-slate-500">Manage all user reviews from connected platforms</p>
         </div>
         <div className="flex items-center gap-3">
+          <Select value={selectedLocale} onValueChange={setSelectedLocale}>
+            <SelectTrigger className="h-10 w-[180px] rounded-xl border border-slate-200 bg-white text-sm text-slate-600">
+              <SelectValue placeholder="All languages" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All languages</SelectItem>
+              {localeOptions.map((item) => (
+                <SelectItem key={item.locale} value={item.locale}>
+                  {item.locale.toUpperCase()} · {item.count}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <div className="relative w-full md:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input 
