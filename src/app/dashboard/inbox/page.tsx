@@ -143,7 +143,12 @@ export default function InboxPage() {
           <p className="text-sm text-slate-500">Manage all user reviews from connected platforms</p>
         </div>
         <div className="flex items-center gap-3">
-          <Select value={selectedLocale} onValueChange={setSelectedLocale}>
+          <Select
+            value={selectedLocale}
+            onValueChange={(value) => {
+              setSelectedLocale(value ?? "all");
+            }}
+          >
             <SelectTrigger className="h-10 w-[180px] rounded-xl border border-slate-200 bg-white text-sm text-slate-600">
               <SelectValue placeholder="All languages" />
             </SelectTrigger>
