@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Globe2, Sparkles, Languages, Activity, ShieldCheck } from "lucide-react";
+import { ArrowRight, Globe2, Sparkles, Languages, Activity, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { getAuthAwarePath } from "@/lib/auth-redirect";
 import { useEffect, useState } from "react";
@@ -101,6 +101,30 @@ export function Hero() {
           <p className="mt-8 max-w-2xl text-lg md:text-xl text-slate-600 leading-relaxed">
             Kivo pinpoints localization friction across markets, estimates impact on churn and conversion, and gives your team a prioritized action roadmap.
           </p>
+
+          <div className="mt-8 w-full max-w-3xl rounded-3xl border border-slate-200/70 bg-white/70 p-5 text-left shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">From translation to decisions</p>
+              <span className="inline-flex w-fit items-center rounded-full border border-blue-200/70 bg-blue-50/70 px-3 py-1 text-[11px] font-semibold text-blue-700">
+                Normalization powered by Lingo.dev
+              </span>
+            </div>
+            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+              {[
+                "Normalize feedback across 140+ locales (comparability)",
+                "Quantify risk/opportunity by locale with evidence",
+                "Generate a prioritized roadmap with impact framing",
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2 rounded-2xl border border-slate-200/70 bg-white/75 p-3">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 text-emerald-600" />
+                  <p className="text-sm font-medium leading-snug text-slate-700">{item}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-xs font-semibold text-slate-500">
+              Not a ticketing tool. Kivo complements Jira, Linear, and Zendesk by prioritizing what to fix next and why.
+            </p>
+          </div>
 
           <div className="mt-12 flex flex-col sm:flex-row gap-4 items-center justify-center w-full">
             <Button size="lg" className="kivo-primary-btn h-14 rounded-full px-8 text-base font-semibold transition-all" onClick={toStart}>

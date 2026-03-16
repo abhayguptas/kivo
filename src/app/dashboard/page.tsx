@@ -236,6 +236,52 @@ export default function DashboardPage() {
     remaining?: number | null;
   } | null>(null);
 
+  const exportOpportunityBrief = useCallback(() => {
+    if (!analytics?.opportunitiesTop3?.length) return;
+
+    const now = new Date();
+    const lines: string[] = [
+      "# Kivo Opportunity Brief",
+      "",
+      `Generated: ${now.toISOString()}`,
+      `Proof mode: ${analytics.proof.mode}`,
+      "",
+      "Kivo is not a ticketing tool. It complements Jira/Linear/Zendesk by turning multilingual feedback into decision-grade priorities.",
+      "",
+      "## Top Opportunities",
+      "",
+    ];
+
+    analytics.opportunitiesTop3.forEach((opportunity, index) => {
+      lines.push(`### ${index + 1}. ${opportunity.headline}`);
+      lines.push(`- Locale: ${opportunity.locale.toUpperCase()}`);
+      lines.push(`- Priority: ${opportunity.priority}`);
+      lines.push(`- Confidence: ${opportunity.confidence}%`);
+      lines.push(`- Impact: +${opportunity.impactPct}% (expected lift +${opportunity.expectedLift}%)`);
+      lines.push(`- Owner hint: ${opportunity.ownerHint}`);
+      lines.push("");
+      lines.push("Evidence:");
+      opportunity.evidence.forEach((point) => lines.push(`- ${point}`));
+      lines.push("");
+    });
+
+    lines.push("## Next Step");
+    lines.push("Paste these opportunities into Jira/Linear and assign owners. Re-run Kivo after shipping changes to validate trend movement by locale.");
+    lines.push("");
+    lines.push("Powered by Lingo.dev (translation normalization for cross-locale comparability).");
+
+    const content = lines.join("\n");
+    const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `kivo-opportunity-brief-${now.toISOString().slice(0, 10)}.md`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }, [analytics]);
+
   const openUpgrade = useCallback((title: string, message: string) => {
     setUpgradeTitle(title);
     setUpgradeMessage(message);
@@ -667,6 +713,15 @@ export default function DashboardPage() {
                 <CardDescription>Evidence-backed locale priorities with confidence scoring</CardDescription>
               </div>
               <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-9 rounded-lg border-slate-200 bg-white/80 text-xs font-semibold text-slate-700"
+                  onClick={exportOpportunityBrief}
+                  disabled={!analytics?.opportunitiesTop3?.length}
+                >
+                  Export brief
+                </Button>
                 <button
                   onClick={() => setSelectedLocale("all")}
                   className={cn(

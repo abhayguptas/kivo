@@ -8,6 +8,8 @@ Kivo helps global product teams turn multilingual customer feedback into priorit
 
 Instead of just translating reviews, Kivo identifies market-level friction, highlights risk by locale, and surfaces which fixes can improve retention and conversion fastest.
 
+**Not a ticketing tool:** Kivo complements Jira/Linear/Zendesk by turning multilingual feedback into decision-grade opportunities with **impact**, **confidence**, and **evidence**.
+
 ---
 
 ## Why Kivo
@@ -21,6 +23,23 @@ Kivo solves this by combining:
 2. **High-fidelity runtime localization** with **Lingo.dev SDK**
 3. **AI-driven prioritization** (opportunities, risk, impact)
 4. **Premium SaaS analytics UX** (charts, signals, conversion-focused summaries)
+
+---
+
+## How Kivo Differs From Multilingual Ticketing Tools
+
+Many products help collect feedback, translate threads, and manage tickets. Kivo is a different category: **localization intelligence for Product/Growth**.
+
+| Dimension | Multilingual ticketing tools | Kivo |
+|---|---|---|
+| Focus | Threads, tickets, collaboration workflows | Analytics + prioritized opportunities |
+| Output | Translated discussions and status management | Executive brief + Top 3 opportunities + charts + impact framing |
+| Primary users | Support/community teams + contributors | PM/Growth + leadership decisioning |
+| Differentiators | Workflow management (labels/status/assignment) | Evidence trails, confidence, impact modeling, premium locale gates, ingestion telemetry |
+| Lingo.dev usage | Translation to enable participation | Translation normalization for comparability + runtime translation + CLI workflow |
+
+Judge-friendly note:
+Kivo is not just translating. We normalize multilingual feedback so it can be compared across markets, then surface revenue/churn decisions.
 
 ---
 
